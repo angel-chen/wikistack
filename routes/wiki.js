@@ -1,6 +1,6 @@
 const wiki = require('express').Router();
 const routes = require('../views');
-const { addPage, wikipage } = require('../views');
+const { addPage } = require('../views');
 const { Page } = require('../models')
 
 wiki.get('/', (req, res, next) => {
@@ -38,7 +38,7 @@ wiki.get('/:slug', async (req, res, next) => {
         slug: req.params.slug
       }
     })
-    res.send(wikipage(page))
+    res.send(routes.wikiPage(page))
   }
   catch(error) {next(error)}
 })
