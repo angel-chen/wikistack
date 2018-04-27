@@ -1,13 +1,11 @@
 const wiki = require('express').Router();
 const routes = require('../views');
-const { addPage } = require('../views');
+const { addPage, wikipage } = require('../views');
 const { Page } = require('../models')
 
 wiki.get('/', (req, res, next) => {
   res.send(routes.main());
 })
-
-
 
 wiki.post('/', async(req, res, next) => {
   const author = req.body.author;
@@ -31,6 +29,18 @@ wiki.post('/', async(req, res, next) => {
 
 wiki.get('/add', (req, res, next) => {
   res.send(addPage());
+})
+
+wiki.get('/:slug', async (req, res, next) => {
+  try {
+    const page = await Page.findOne({
+      where: {
+        slug: req.params.slug
+      }
+    })
+    res.send(wikipage(page))
+  }
+  catch(error) {next(error)}
 })
 
 module.exports = wiki
