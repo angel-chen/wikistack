@@ -4,7 +4,7 @@ const editPage = require("./editPage");
 const main = require("./main");
 const userList = require("./userList");
 const userPages = require("./userPages");
-const wikiPage = require("./wikiPage");
+const wikiPage = require("./wikipage");
 
 //original middleware for main route
 // router.get('/', (req, res) => {
