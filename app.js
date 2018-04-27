@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const routes = require('./views/index');
 const layout = require('./views/layout');
 const { db, Page, User } = require('./models');
+const wiki = require('./routes/wiki');
+const users = require('./routes/users');
 
 const app = express();
 
@@ -13,9 +15,16 @@ app.use(express.static(__dirname + "/public"));
 
 const PORT = 3000;
 
-app.use('/', (req, res) => {
-  res.send(routes.main());
-})
+// app.use('/', (req, res) => {
+//   res.send(routes.main());
+// })
+
+//original wiki main route
+// app.use('/wiki', require(routes));
+
+// app.get('/' (req, res) => {
+//   res.redirect('/wiki')
+// })
 
 const init = async(req, res) => {
   await db.sync({force: true});
