@@ -1,13 +1,16 @@
-const wiki = require('express').Router();
-const routes = require('../views');
-const { addPage } = require('../views');
-const { Page } = require('../models')
+const wiki = require("express").Router();
+const routes = require("../views");
+const { addPage } = require("../views");
+const { Page } = require("../models");
 
-wiki.get('/', (req, res, next) => {
-  res.send(routes.main());
-})
+wiki.get("/", async (req, res, next) => {
+try {
+  const pages = await Page.findAll()
+  res.send(routes.main(pages));
+} catch(error) { next(error) }
+});
 
-wiki.post('/', async(req, res, next) => {
+wiki.post("/", async (req, res, next) => {
   const author = req.body.author;
   const email = req.body.author;
   const title = req.body.title;
@@ -20,27 +23,29 @@ wiki.post('/', async(req, res, next) => {
   });
 
   try {
-      await page.save();
-      console.log(page);
-      res.redirect('/');
+    await page.save();
+    console.log(page);
+    res.redirect(`/wiki/${page.slug}`);
+  } catch (error) {
+    next(error);
   }
-  catch (error) {next(error)}
-})
+});
 
-wiki.get('/add', (req, res, next) => {
+wiki.get("/add", (req, res, next) => {
   res.send(addPage());
-})
+});
 
-wiki.get('/:slug', async (req, res, next) => {
+wiki.get("/:slug", async (req, res, next) => {
   try {
     const page = await Page.findOne({
       where: {
         slug: req.params.slug
       }
-    })
-    res.send(routes.wikiPage(page))
+    });
+    res.send(routes.wikiPage(page));
+  } catch (error) {
+    next(error);
   }
-  catch(error) {next(error)}
-})
+});
 
-module.exports = wiki
+module.exports = wiki;
