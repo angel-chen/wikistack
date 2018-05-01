@@ -1,7 +1,7 @@
 const wiki = require("express").Router();
 const routes = require("../views");
-const { addPage } = require("../views");
-const { Page } = require("../models");
+const { addPage, editPage, main, userList, userPages, wikiPage } = require("../views");
+const { Page, User } = require("../models");
 
 wiki.get("/", async (req, res, next) => {
 try {
@@ -12,7 +12,7 @@ try {
 
 wiki.post("/", async (req, res, next) => {
   const author = req.body.author;
-  const email = req.body.author;
+  const email = req.body.email;
   const title = req.body.title;
   const content = req.body.content;
   const status = req.body.status;
@@ -23,7 +23,15 @@ wiki.post("/", async (req, res, next) => {
   });
 
   try {
+    const [user, wasCreated] = await User.findOrCreate({
+      where: {
+        name: author,
+        email: email
+      }
+    })
+
     await page.save();
+    page.setAuthor(user);
     console.log(page);
     res.redirect(`/wiki/${page.slug}`);
   } catch (error) {

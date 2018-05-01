@@ -13,6 +13,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/public"));
 app.use('/wiki', wiki);
+app.use('/users', user);
 
 const PORT = 3000;
 
